@@ -1,0 +1,75 @@
+//název strategie: Pokus
+//verze: pro brokera bez nedělní svíčky
+//princip: vstup long v pondělí v 0:00
+//timeframe: 1D
+//trh: majors
+
+//+------------------------------------------------------------------+
+//| externi vstupni parametry strategie                              |
+//+------------------------------------------------------------------+
+extern double Stoploss_hodnota_v_pipech = 1000;  //Stoploss
+extern double Profit_target_v_pipech = 2000;     //Profit target
+extern double Velikost_pozice = 0.01;            //Lots
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+  {
+//---
+   
+//---
+   return(INIT_SUCCEEDED);
+  }
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+  {
+//---
+   
+  }
+//+------------------------------------------------------------------+
+//| Expert tick function                                             |
+//+------------------------------------------------------------------+
+void OnTick()
+  {
+//---
+   
+  }
+//+------------------------------------------------------------------+
+
+//+------------------------------------------------------------------+
+//| Expert start function                                          |
+//+------------------------------------------------------------------+
+int start()
+   {
+//+------------------------------------------------------------------+
+//| definice proměnných                                              |
+//+------------------------------------------------------------------+
+int D = DayOfWeek();                            //zjistí den v týdnu (neděle = 0, pátek = 5)
+int m = TimeMinute(TimeCurrent());              //zjistí aktuální minutu
+int h = TimeHour(TimeCurrent());                //zjistí aktuální hodinu
+int ticket, q;                                  //proměnná pro zadání příkazu, počítadlo
+double SL = Stoploss_hodnota_v_pipech*Point;    //definice SL, pipové vyjádření pro jednotlivé měnové páry
+double PT = Profit_target_v_pipech*Point;       //definice PT
+int Magic_number  = 1101;                       //identifikační číslo strategie
+string Text = "Moje první strategie";           //komentář
+//+------------------------------------------------------------------+
+//| omezovač počtu vstupů                                            |
+//+------------------------------------------------------------------+
+for(q=0;q<OrdersTotal();q++)
+   {if(OrderSelect(q, SELECT_BY_POS, MODE_TRADES) && OrderMagicNumber()==Magic_number)
+   {return(0);}}
+   
+//+------------------------------------------------------------------+
+//| podmínka vstupu                                                  |
+//+------------------------------------------------------------------+
+if ( D== 2 && h == 10 && m < 5)
+   {ticket = OrderSend(Symbol(),OP_BUY,0.01,Ask,0,Ask-SL,Ask+PT,Text, Magic_number,0,Blue); }
+
+
+   return(0);
+   }
+
+   
